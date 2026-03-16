@@ -1,0 +1,27 @@
+@model DirectWholesaleSupply.Models.Category
+@{
+    ViewData["Title"] = "Delete Category";
+}
+
+<div class="page-header">
+    <h2>🗑️ Delete Category</h2>
+    <a href="/Categories" class="btn btn-light">← Back</a>
+</div>
+
+<div class="card" style="max-width:460px;">
+    <div class="card-header" style="background:linear-gradient(135deg,#c62828,#e53935);">
+        <h5>⚠️ Confirm Deletion</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-danger">
+            Deleting this category will also affect all associated products. This cannot be undone.
+        </div>
+        <p style="margin-bottom:20px;"><strong>@Model.CategoryName</strong> — @Model.Products.Count product(s)</p>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.CategoryID" />
+            <button type="submit" class="btn btn-danger">🗑️ Yes, Delete</button>
+            <a href="/Categories" class="btn btn-light">Cancel</a>
+        </form>
+    </div>
+</div>

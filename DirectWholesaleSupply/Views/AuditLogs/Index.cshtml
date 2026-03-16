@@ -1,0 +1,70 @@
+@model List<DirectWholesaleSupply.Models.AuditLog>
+@{
+    ViewData["Title"] = "Audit Logs";
+    int page = ViewBag.Page;
+    int totalPages = ViewBag.TotalPages;
+}
+
+<div class="page-header">
+    <h2>📝 Audit Logs</h2>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Date &amp; Time (PHT)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int start = (page - 1) * 30 + 1; }
+                @foreach (var log in Model)
+                {
+                    <tr>
+                        <td style="color:var(--text-muted);font-size:12px;">@start</td>
+                        <td><strong>@log.User?.FullName</strong></td>
+                        <td>
+                            <span class="badge badge-active">@log.Action</span>
+                        </td>
+                        <td style="font-size:12px;color:var(--text-secondary);">@log.Details</td>
+                        <td style="font-size:12px;color:var(--text-muted);">@log.LogDate.ToString("MMM dd, yyyy HH:mm:ss")</td>
+                    </tr>
+                    start++;
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" style="text-align:center;padding:32px;color:var(--text-muted);">
+                            No audit logs found.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@if (totalPages > 1)
+{
+    <div style="margin-top:16px;">
+        <div class="pagination">
+            @if (page > 1)
+            {
+                <a href="/AuditLogs?page=@(page - 1)" class="page-link">‹ Prev</a>
+            }
+            @for (int i = Math.Max(1, page - 2); i <= Math.Min(totalPages, page + 2); i++)
+            {
+                <a href="/AuditLogs?page=@i" class="page-link @(i == page ? "active" : "")">@i</a>
+            }
+            @if (page < totalPages)
+            {
+                <a href="/AuditLogs?page=@(page + 1)" class="page-link">Next ›</a>
+            }
+        </div>
+    </div>
+}

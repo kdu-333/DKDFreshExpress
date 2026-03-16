@@ -1,0 +1,353 @@
+@model DirectWholesaleSupply.ViewModels.PriceListViewModel
+@{
+    ViewData["Title"] = "Print Price List";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Price List - DKD Fresh Express</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            color: #111;
+            background: white;
+            padding: 20px;
+        }
+
+        /* ── Screen action buttons ── */
+        .screen-only {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-print {
+            background: #1a6b2f;
+            color: white;
+        }
+
+        .btn-back {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+
+        /* ── Header ── */
+        .print-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #1a6b2f;
+        }
+
+            .print-header h1 {
+                font-size: 24px;
+                font-weight: 800;
+                color: #1a6b2f;
+                margin-bottom: 6px;
+            }
+
+            .print-header .contact-line {
+                font-size: 13px;
+                color: #333;
+                margin-bottom: 4px;
+            }
+
+            .print-header .desc-line {
+                font-size: 12px;
+                color: #555;
+                margin-bottom: 6px;
+            }
+
+            .print-header .date-line {
+                font-size: 12px;
+                color: #444;
+                font-weight: 600;
+            }
+
+        /* ── Category sections ── */
+        .category-section {
+            margin-bottom: 18px;
+            page-break-inside: avoid;
+        }
+
+        .cat-title {
+            background: #1a6b2f;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 7px 12px;
+        }
+
+        /* ── Table ── */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        thead th {
+            background: #e8f5e9;
+            color: #1a6b2f;
+            padding: 7px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid #1a6b2f;
+            text-align: left;
+        }
+
+            thead th.price-th {
+                text-align: right;
+            }
+
+        tbody td {
+            padding: 7px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(even) td {
+            background: #fafff9;
+        }
+
+        td.price-td {
+            text-align: right;
+            font-weight: 700;
+            font-size: 13px;
+            color: #1a2e1a;
+        }
+
+        td.num-td {
+            color: #999;
+            font-size: 11px;
+            width: 32px;
+        }
+
+        td.unit-td {
+            color: #666;
+        }
+
+        /* ── Price movement ── */
+        .price-up {
+            color: #2e7d32;
+        }
+
+            .price-up::after {
+                content: " \25B2";
+                font-size: 9px;
+            }
+
+        .price-down {
+            color: #c62828;
+        }
+
+            .price-down::after {
+                content: " \25BC";
+                font-size: 9px;
+            }
+
+        /* ── Footer note ── */
+        .footer-note {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+            font-size: 11px;
+            color: #666;
+            text-align: center;
+        }
+
+        /* ── PRINT STYLES ── */
+        @@media print {
+            body {
+                padding: 10px;
+            }
+
+            .screen-only {
+                display: none !important;
+            }
+
+            .print-header {
+                margin-bottom: 14px;
+                padding-bottom: 10px;
+            }
+
+            .category-section {
+                page-break-inside: avoid;
+                margin-bottom: 12px;
+            }
+
+            .cat-title {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            thead th {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            tbody tr:nth-child(even) td {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            table {
+                page-break-inside: auto;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Screen-only action buttons -->
+    <div class="screen-only">
+        <button onclick="window.print()" class="btn btn-print">&#128438; Print</button>
+        <a href="/PriceList" class="btn btn-back">&#8592; Back to Price List</a>
+        <a href="/Dashboard" class="btn btn-back">&#127968; Dashboard</a>
+    </div>
+
+    <!-- Header -->
+    <div class="print-header">
+        <h1>&#129527; DKD Fresh Express</h1>
+        <div class="contact-line">
+            &#128205; Davao City, Philippines &nbsp;|&nbsp;
+            &#128241; 09109160568 &nbsp;|&nbsp;
+            &#128241; 09383174368
+        </div>
+        <div class="desc-line">
+            Wholesale &amp; Retail Supplier of Vegetables, Fruits, Seafood &amp; Pork
+        </div>
+        <div class="date-line">
+            Price List as of <strong>@Model.PrintDate.ToString("MMMM dd, yyyy") &ndash; @Model.PrintDate.ToString("hh:mm tt")</strong> Philippine Standard Time
+        </div>
+    </div>
+
+    <!-- Products by Category -->
+    @foreach (var group in Model.Groups)
+    {
+        bool isPork = group.Category.CategoryName.StartsWith("Pork");
+
+        <div class="category-section">
+            <div class="cat-title">@group.Category.CategoryName</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:32px;">#</th>
+                        <th>Product</th>
+                        <th style="width:70px;">Unit</th>
+                        @if (isPork)
+                        {
+                            <th class="price-th" style="width:110px;">Wholesale</th>
+                            <th class="price-th" style="width:110px;">Retail</th>
+                        }
+                        else
+                        {
+                            <th class="price-th" style="width:110px;">Price</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int n = 1;
+                    }
+                    @foreach (var pvm in group.Products)
+                    {
+                        var p = pvm.Product;
+                        <tr>
+                            <td class="num-td">@n</td>
+                            <td>@p.ProductName</td>
+                            <td class="unit-td">per @p.Unit</td>
+                            @if (isPork)
+                            {
+                                <td class="price-td">
+                                    @if (pvm.WholesalePriceMovement > 0)
+                                    {
+                                        <span class="price-up">&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                    else if (pvm.WholesalePriceMovement < 0)
+                                    {
+                                        <span class="price-down">&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                </td>
+                                <td class="price-td">
+                                    @if (pvm.RetailPriceMovement > 0)
+                                    {
+                                        <span class="price-up">&#8369;@p.RetailPrice.ToString("N2")</span>
+                                    }
+                                    else if (pvm.RetailPriceMovement < 0)
+                                    {
+                                        <span class="price-down">&#8369;@p.RetailPrice.ToString("N2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>&#8369;@p.RetailPrice.ToString("N2")</span>
+                                    }
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="price-td">
+                                    @if (pvm.WholesalePriceMovement > 0)
+                                    {
+                                        <span class="price-up">&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                    else if (pvm.WholesalePriceMovement < 0)
+                                    {
+                                        <span class="price-down">&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span>&#8369;@p.WholesalePrice.ToString("N2")</span>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                        n++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    <div class="footer-note">
+        &#9888;&#65039; Prices are subject to change without prior notice depending on market supply, availability, and season.
+        For inquiries, call 09109160568 or 09383174368.
+    </div>
+
+</body>
+</html>

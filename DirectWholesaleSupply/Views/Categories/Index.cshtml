@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Categories";
+    var cats = Model as IEnumerable<dynamic> ?? Enumerable.Empty<dynamic>();
+}
+
+<div class="page-header">
+    <h2>🏷️ Categories</h2>
+    <a href="/Categories/Create" class="btn btn-primary">➕ Add Category</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category Name</th>
+                    <th>Sort Order</th>
+                    <th>Active Products</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{ int r = 1; }
+                @foreach (var cat in cats)
+                {
+                    <tr>
+                        <td style="color:var(--text-muted);font-size:12px;">@r</td>
+                        <td><strong>@cat.CategoryName</strong></td>
+                        <td>@cat.SortOrder</td>
+                        <td><span class="badge badge-active">@cat.ProductCount products</span></td>
+                        <td>
+                            <div style="display:flex;gap:4px;">
+                                <a href="/Categories/Edit/@cat.CategoryID" class="btn btn-xs btn-outline">✏️ Edit</a>
+                                <a href="/Categories/Delete/@cat.CategoryID" class="btn btn-xs btn-danger">🗑️</a>
+                            </div>
+                        </td>
+                    </tr>
+                    r++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

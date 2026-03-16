@@ -1,0 +1,111 @@
+@model List<DirectWholesaleSupply.Models.Product>
+@{
+    ViewData["Title"] = "Update Prices";
+    var categories = ViewBag.Categories as List<DirectWholesaleSupply.Models.Category> ?? new();
+    int? selCat = ViewBag.SelectedCategory;
+    Layout = "_Layout";
+}
+
+<div class="page-header">
+    <h2>&#128176; Update Prices</h2>
+    <a href="/Products" class="btn btn-light">&#8592; Back to Products</a>
+</div>
+
+<div class="alert alert-warning">
+    &#9889; <strong>Tip:</strong> Only modified prices will be saved. Use the Quick Adjust buttons on the Products page for single-item changes.
+</div>
+
+<!-- Category filter -->
+<div class="card" style="margin-bottom:16px;">
+    <div class="card-body" style="padding:12px 20px;">
+        <form method="get" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+            <div class="form-group" style="margin:0;min-width:220px;">
+                <label class="form-label">Filter by Category</label>
+                <select name="categoryId" class="form-control" onchange="this.form.submit()">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in categories)
+                    {
+                        if (selCat != null && selCat.ToString() == cat.CategoryID.ToString())
+                        {
+                            <option value="@cat.CategoryID" selected>@cat.CategoryName</option>
+                        }
+                        else
+                        {
+                            <option value="@cat.CategoryID">@cat.CategoryName</option>
+                        }
+                    }
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
+
+<form method="post" action="/Products/SavePrices">
+    @Html.AntiForgeryToken()
+
+    @{
+        var grouped = Model.GroupBy(p => p.Category?.CategoryName ?? "").OrderBy(g => g.Key);
+        int idx = 0;
+    }
+
+    @foreach (var group in grouped)
+    {
+        <div class="card" style="margin-bottom:16px;">
+            <div class="category-header">
+                &#127991;&#65039; @group.Key
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Unit</th>
+                            <th style="width:140px;">Wholesale Price (&#8369;)</th>
+                            <th style="width:140px;">Retail Price (&#8369;)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in group.OrderBy(x => x.SortOrder))
+                        {
+                            <input type="hidden" name="prices[@idx].ProductID" value="@p.ProductID" />
+                            <tr>
+                                <td><strong>@p.ProductName</strong></td>
+                                <td>per @p.Unit</td>
+                                <td>
+                                    <input type="number" step="0.01" min="0"
+                                           name="prices[@idx].WholesalePrice"
+                                           value="@p.WholesalePrice"
+                                           class="form-control price-input" />
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" min="0"
+                                           name="prices[@idx].RetailPrice"
+                                           value="@p.RetailPrice"
+                                           class="form-control price-input" />
+                                </td>
+                            </tr>
+                            idx++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body" style="text-align:center;padding:40px;color:var(--text-muted);">
+                No products found.
+            </div>
+        </div>
+    }
+
+    <div style="position:sticky;bottom:0;background:var(--bg);padding:16px 0;border-top:1px solid var(--border);display:flex;gap:10px;z-index:10;">
+        <button type="submit" class="btn btn-success">&#128190; Save All Changes</button>
+        <a href="/Products" class="btn btn-light">Cancel</a>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted);align-self:center;">
+            @Model.Count product(s) listed
+        </span>
+    </div>
+</form>

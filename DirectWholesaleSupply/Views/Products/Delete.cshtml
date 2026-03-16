@@ -1,0 +1,52 @@
+@model DirectWholesaleSupply.Models.Product
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<div class="page-header">
+    <h2>🗑️ Delete Product</h2>
+    <a href="/Products" class="btn btn-light">← Back to Products</a>
+</div>
+
+<div class="card" style="max-width:500px;">
+    <div class="card-header" style="background:linear-gradient(135deg,#c62828,#e53935);">
+        <h5>⚠️ Confirm Deletion</h5>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-danger">
+            You are about to permanently delete this product. This action cannot be undone.
+        </div>
+
+        <table style="width:100%;margin-bottom:20px;">
+            <tr>
+                <td style="padding:8px 0;color:var(--text-muted);width:140px;">Product Name</td>
+                <td><strong>@Model.ProductName</strong></td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0;color:var(--text-muted);">Category</td>
+                <td>@Model.Category?.CategoryName</td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0;color:var(--text-muted);">Unit</td>
+                <td>per @Model.Unit</td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0;color:var(--text-muted);">Wholesale Price</td>
+                <td>₱@Model.WholesalePrice.ToString("N2")</td>
+            </tr>
+            <tr>
+                <td style="padding:8px 0;color:var(--text-muted);">Retail Price</td>
+                <td>₱@Model.RetailPrice.ToString("N2")</td>
+            </tr>
+        </table>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.ProductID" />
+            <div style="display:flex;gap:10px;">
+                <button type="submit" class="btn btn-danger">🗑️ Yes, Delete</button>
+                <a href="/Products" class="btn btn-light">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

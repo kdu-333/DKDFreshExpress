@@ -1,0 +1,29 @@
+@model DirectWholesaleSupply.Models.Category
+@{
+    ViewData["Title"] = "Edit Category";
+}
+
+<div class="page-header">
+    <h2>✏️ Edit Category</h2>
+    <a href="/Categories" class="btn btn-light">← Back</a>
+</div>
+
+<div class="card" style="max-width:480px;">
+    <div class="card-header"><h5>@Model.CategoryName</h5></div>
+    <div class="card-body">
+        <form method="post" action="/Categories/Edit">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="CategoryID" value="@Model.CategoryID" />
+            <div class="form-group">
+                <label class="form-label">Category Name *</label>
+                <input type="text" name="CategoryName" value="@Model.CategoryName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label class="form-label">Sort Order</label>
+                <input type="number" name="SortOrder" value="@Model.SortOrder" class="form-control" />
+            </div>
+            <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+            <a href="/Categories" class="btn btn-light">Cancel</a>
+        </form>
+    </div>
+</div>

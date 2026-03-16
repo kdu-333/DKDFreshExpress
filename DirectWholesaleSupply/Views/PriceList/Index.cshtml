@@ -1,0 +1,130 @@
+@model DirectWholesaleSupply.ViewModels.PriceListViewModel
+@{
+    ViewData["Title"] = "Price List";
+}
+
+<div class="page-header no-print">
+    <h2>📋 Current Price List</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a href="/PriceList/Print" class="btn btn-warning" target="_blank">🖨️ Print Version</a>
+        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+        {
+            <a href="/Products/UpdatePrices" class="btn btn-success">💰 Update Prices</a>
+        }
+    </div>
+</div>
+
+<!-- Legend -->
+<div class="no-print" style="display:flex;gap:16px;margin-bottom:16px;font-size:13px;align-items:center;flex-wrap:wrap;">
+    <span style="color:var(--text-muted);">Price Movement:</span>
+    <span class="price-badge green-up" style="font-size:13px;">₱120.00</span>
+    <span style="color:var(--text-muted);font-size:12px;">= price increased</span>
+    <span class="price-badge red-down" style="font-size:13px;">₱80.00</span>
+    <span style="color:var(--text-muted);font-size:12px;">= price decreased</span>
+    <span style="font-size:12px;color:var(--text-muted);margin-left:auto;">
+        As of @Model.PrintDate.ToString("MMMM dd, yyyy hh:mm tt") PHT
+    </span>
+</div>
+
+@Html.AntiForgeryToken()
+
+@foreach (var group in Model.Groups)
+{
+    <div class="card" style="margin-bottom:18px;">
+        <div class="category-header">
+            🏷️ @group.Category.CategoryName
+        </div>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width:40px;">#</th>
+                        <th>Product</th>
+                        <th>Unit</th>
+                        @{
+                            bool isPork = group.Category.CategoryName.StartsWith("Pork");
+                        }
+                        @if (isPork)
+                        {
+                            <th>Wholesale Price</th>
+                            <th>Retail Price</th>
+                        }
+                        else
+                        {
+                            <th>Price</th>
+                        }
+                        @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                        {
+                            <th class="no-print">Quick Adjust</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int rowNum = 1; }
+                    @foreach (var pvm in group.Products)
+                    {
+                        var p = pvm.Product;
+                        <tr data-product-row="@p.ProductID">
+                            <td style="color:var(--text-muted);font-size:12px;">@rowNum</td>
+                            <td><strong>@p.ProductName</strong></td>
+                            <td style="color:var(--text-muted);">per @p.Unit</td>
+
+                            @if (isPork)
+                            {
+                                <td>
+                                    <span class="wholesale-price price-badge @(pvm.WholesalePriceMovement > 0 ? "green-up" : pvm.WholesalePriceMovement < 0 ? "red-down" : "")">
+                                        ₱@p.WholesalePrice.ToString("N2")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="retail-price price-badge @(pvm.RetailPriceMovement > 0 ? "green-up" : pvm.RetailPriceMovement < 0 ? "red-down" : "")">
+                                        ₱@p.RetailPrice.ToString("N2")
+                                    </span>
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <span class="wholesale-price price-badge @(pvm.WholesalePriceMovement > 0 ? "green-up" : pvm.WholesalePriceMovement < 0 ? "red-down" : "")">
+                                        ₱@p.WholesalePrice.ToString("N2")
+                                    </span>
+                                </td>
+                            }
+
+                            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                            {
+                                <td class="no-print">
+                                    <div class="quick-adjust-group">
+                                        <button class="btn btn-xs btn-up quick-adjust-btn"
+                                                data-product="@p.ProductID" data-amount="1" data-field="both"
+                                                title="Increase ₱1">▲+1</button>
+                                        <button class="btn btn-xs btn-down quick-adjust-btn"
+                                                data-product="@p.ProductID" data-amount="-1" data-field="both"
+                                                title="Decrease ₱1">▼-1</button>
+                                        <button class="btn btn-xs btn-up quick-adjust-btn"
+                                                data-product="@p.ProductID" data-amount="5" data-field="both"
+                                                title="Increase ₱5">▲+5</button>
+                                        <button class="btn btn-xs btn-down quick-adjust-btn"
+                                                data-product="@p.ProductID" data-amount="-5" data-field="both"
+                                                title="Decrease ₱5">▼-5</button>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                        rowNum++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (!Model.Groups.Any())
+{
+    <div class="card">
+        <div class="card-body" style="text-align:center;padding:40px;color:var(--text-muted);">
+            <div style="font-size:40px;margin-bottom:8px;">📭</div>
+            No active products found.
+        </div>
+    </div>
+}

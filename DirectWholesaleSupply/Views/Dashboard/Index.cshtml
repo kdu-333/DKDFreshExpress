@@ -1,0 +1,134 @@
+@model DirectWholesaleSupply.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<!-- Stat Cards -->
+<div class="stat-cards">
+    <div class="stat-card">
+        <div class="stat-icon green">📦</div>
+        <div class="stat-info">
+            <div class="label">Total Products</div>
+            <div class="value">@Model.TotalProducts</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon teal">🏷️</div>
+        <div class="stat-info">
+            <div class="label">Categories</div>
+            <div class="value">@Model.TotalCategories</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon amber">💰</div>
+        <div class="stat-info">
+            <div class="label">Price Changes Today</div>
+            <div class="value">@Model.PriceChangesToday</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue">✅</div>
+        <div class="stat-info">
+            <div class="label">Active Products</div>
+            <div class="value">@Model.ActiveProducts</div>
+        </div>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 280px;gap:20px;flex-wrap:wrap;">
+
+    <!-- Recent Price Updates -->
+    <div class="card">
+        <div class="card-header">
+            <h5>📈 Recent Price Updates</h5>
+            <a href="/AuditLogs" class="btn btn-sm btn-light no-print" style="color:var(--primary);">View All</a>
+        </div>
+        <div class="table-responsive">
+            @if (Model.RecentPriceUpdates.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Old W. Price</th>
+                            <th>New W. Price</th>
+                            <th>Old R. Price</th>
+                            <th>New R. Price</th>
+                            <th>Updated By</th>
+                            <th>Date & Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model.RecentPriceUpdates)
+                        {
+                            <tr>
+                                <td><strong>@h.ProductName</strong></td>
+                                <td><span style="font-size:12px;color:var(--text-muted);">@h.CategoryName</span></td>
+                                <td style="color:var(--text-muted);">₱@h.OldWholesalePrice.ToString("N2")</td>
+                                <td>
+                                    <span class="price-badge @(h.NewWholesalePrice > h.OldWholesalePrice ? "green-up" : h.NewWholesalePrice < h.OldWholesalePrice ? "red-down" : "")">
+                                        ₱@h.NewWholesalePrice.ToString("N2")
+                                    </span>
+                                </td>
+                                <td style="color:var(--text-muted);">₱@h.OldRetailPrice.ToString("N2")</td>
+                                <td>
+                                    <span class="price-badge @(h.NewRetailPrice > h.OldRetailPrice ? "green-up" : h.NewRetailPrice < h.OldRetailPrice ? "red-down" : "")">
+                                        ₱@h.NewRetailPrice.ToString("N2")
+                                    </span>
+                                </td>
+                                <td>@h.UserFullName</td>
+                                <td style="font-size:12px;color:var(--text-muted);">@h.ChangedAt.ToString("MMM dd HH:mm")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div style="padding:32px;text-align:center;color:var(--text-muted);">
+                    <div style="font-size:32px;margin-bottom:8px;">📊</div>
+                    No price updates yet today.
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+            <div class="card-header"><h5>⚡ Quick Actions</h5></div>
+            <div class="card-body" style="display:flex;flex-direction:column;gap:10px;">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a href="/Products/Create" class="btn btn-primary">➕ Add Product</a>
+                    <a href="/Categories/Create" class="btn btn-outline">🏷️ Add Category</a>
+                }
+                <a href="/Products/UpdatePrices" class="btn btn-success">💰 Update Prices</a>
+                <a href="/PriceList/Print" class="btn btn-warning">🖨️ Print Price List</a>
+                <a href="/PriceList" class="btn btn-light">📋 View Price List</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"><h5>📞 Contact Info</h5></div>
+            <div class="card-body" style="font-size:13px;line-height:2;">
+                <div>📍 Davao City, Philippines</div>
+                <div>📱 09109160568</div>
+                <div>📱 09383174368</div>
+                <div style="margin-top:8px;color:var(--text-muted);font-size:12px;">
+                    Wholesale &amp; Retail Supplier of Vegetables, Fruits, Seafood &amp; Pork
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+@@media (max-width: 900px) {
+    div[style*="grid-template-columns:1fr 280px"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
