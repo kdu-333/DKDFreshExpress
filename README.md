@@ -36,8 +36,8 @@ Server=YOUR_SERVER;Database=DirectWholesaleSupplyDB;User Id=sa;Password=YOUR_PAS
 
 | Role  | Username | Password  |
 |-------|----------|-----------|
-| Admin | admin    | admin123  |
-| Staff | staff    | staff123  |
+| Admin | admin    | sikreto  |
+| Staff | staff    | parabibo  |
 
 ---
 
