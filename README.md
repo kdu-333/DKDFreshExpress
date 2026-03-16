@@ -120,8 +120,3 @@ DKDFreshExpress/
 | Auth | Cookie Authentication + Role-based Authorization |
 
 ---
-
-## 📞 Contact
-
-**DKD Fresh Express**
-📍 Davao City, Philippines
