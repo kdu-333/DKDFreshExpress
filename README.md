@@ -1,85 +1,127 @@
-# Direct Wholesale Supply — Price List Management System
+# 🥬 DKD Fresh Express — Price List Management System
 
-ASP.NET Core MVC (.NET 8) | SQL Server | Entity Framework Core
-
-Davao City, Philippines | 09109160568 | 09383174368
+> ASP.NET Core MVC (.NET 8) · SQL Server · Entity Framework Core
 
 ---
 
-## Quick Start
+## 📋 About
+
+A web-based price list management system for **DKD Fresh Express**, a wholesale and retail supplier of vegetables, fruits, seafood, and pork cuts based in Davao City, Philippines.
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Visual Studio 2022 (17.8+)
+- Visual Studio 2022 (v17.8 or later)
 - .NET 8 SDK
-- SQL Server 2019+ / Express / LocalDB
+- SQL Server 2019+ / SQL Server Express / LocalDB
 
 ### Steps
+1. Clone the repository
+   ```
+   git clone https://github.com/kdu-333/DKDFreshExpress.git
+   ```
+2. Open `DirectWholesaleSupply.sln` in Visual Studio 2022
+3. Edit `appsettings.json` — update the connection string for your SQL Server
+4. Run `Database_Setup.sql` in SSMS to create the database and seed all products
+5. Press **F5** — the app connects and runs
 
-1. Extract the archive and open `DirectWholesaleSupply.sln`
-2. Edit `appsettings.json` — update the connection string for your SQL Server
-3. Press F5 — the app auto-migrates and seeds the database on first run
-4. Login at `/Account/Login`
+---
 
-### Default Connection String (LocalDB)
+## 🔌 Connection String
+
+**LocalDB (default):**
 ```
 Server=(localdb)\mssqllocaldb;Database=DirectWholesaleSupplyDB;Trusted_Connection=True;
 ```
 
-### Full SQL Server
+**SQL Server / Hosting:**
 ```
-Server=YOUR_SERVER;Database=DirectWholesaleSupplyDB;User Id=sa;Password=YOUR_PASS;TrustServerCertificate=True;
-```
-
----
-
-## Login Credentials
-
-| Role  | Username | Password  |
-|-------|----------|-----------|
-| Admin | admin    | sikreto  |
-| Staff | staff    | parabibo  |
-
----
-
-## Features
-
-- Dashboard with stat cards and recent price history
-- Price List grouped by category with PHP peso prices
-- Pork categories display both Wholesale and Retail price
-- Price movement arrows: green up, red down
-- Quick Adjust buttons: +1 / -1 / +5 / -5 (AJAX, no reload)
-- Bulk price editor — edit all prices on one screen
-- Print-ready price list with business header
-- Role-based access (Admin / Staff)
-- Full audit log with Philippine Standard Time timestamps
-- Mobile responsive with hamburger sidebar
-
----
-
-## Database Option (Manual SQL)
-
-Run `Database_Setup.sql` in SQL Server Management Studio
-as an alternative to EF migrations.
-
----
-
-## Project Structure
-
-```
-DirectWholesaleSupply/
-  Controllers/   — Account, Dashboard, Products, Categories,
-                   PriceList, AuditLogs
-  Data/          — AppDbContext with EF seed data
-  Migrations/    — Initial migration (80 products seeded)
-  Models/        — All domain models
-  ViewModels/    — Dashboard, PriceList, etc.
-  Views/         — All Razor views
-  wwwroot/       — CSS (green theme) + JS
-  Program.cs     — App entry point with auto-migrate
-  appsettings.json
+Server=YOUR_SERVER;Database=YOUR_DB;User Id=YOUR_USER;Password=YOUR_PASSWORD;Encrypt=False;TrustServerCertificate=True;
 ```
 
 ---
 
-Direct Wholesale Supply — Davao City, Philippines
-09109160568 | 09383174368
+## 🔑 Login Credentials
+
+| Role  | Username | Password |
+|-------|----------|----------|
+| Admin | admin    | ******** |
+| Staff | staff    | ******** |
+
+> ⚠️ Default credentials are set during database setup. Change them after first login.
+
+---
+
+## ✅ Features
+
+- 📊 Dashboard with stat cards and recent price history
+- 📋 Price list grouped by category with Philippine Peso (₱) prices
+- 🥩 Pork categories display both **Wholesale** and **Retail** prices
+- 📈 Price movement indicators — **▲ green** (up) and **▼ red** (down)
+- ✏️ Click any price to edit it directly (inline edit, no page reload)
+- ⚡ Quick Adjust buttons — **+1 / -1 / +5 / -5** (AJAX)
+- 💰 Bulk price editor — update all prices on one screen
+- 🖨️ Print-ready price list with business header and contact info
+- 👥 Role-based access control — **Admin** and **Staff** roles
+- 📝 Full audit log with Philippine Standard Time (UTC+8) timestamps
+- 📱 Mobile responsive with hamburger sidebar
+
+---
+
+## 🗄️ Database Setup
+
+Run `Database_Setup.sql` in SQL Server Management Studio (SSMS).
+
+The script will:
+- Create all tables
+- Seed 6 categories
+- Seed 80 products with default prices
+- Create default user accounts
+
+---
+
+## 📁 Project Structure
+
+```
+DKDFreshExpress/
+├── Controllers/
+│   ├── AccountController.cs       ← Login / Logout
+│   ├── DashboardController.cs     ← Dashboard
+│   ├── ProductsController.cs      ← CRUD + Price Update + Quick Adjust
+│   ├── CategoriesController.cs    ← Category management (Admin only)
+│   ├── PriceListController.cs     ← Price list + Print
+│   └── AuditLogsController.cs     ← Audit log viewer (Admin only)
+├── Data/
+│   └── AppDbContext.cs            ← EF Core DbContext + seed data
+├── Migrations/                    ← EF Core migration files
+├── Models/                        ← All domain models
+├── ViewModels/                    ← Dashboard, PriceList, etc.
+├── Views/                         ← All Razor views (.cshtml)
+├── wwwroot/
+│   ├── css/site.css               ← Green theme
+│   └── js/site.js                 ← AJAX + mobile sidebar
+├── Database_Setup.sql             ← Standalone SQL setup script
+├── appsettings.json               ← Connection string config
+└── Program.cs                     ← App entry point
+```
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Backend | ASP.NET Core MVC (.NET 8), C# |
+| ORM | Entity Framework Core 8 |
+| Database | Microsoft SQL Server |
+| Frontend | Razor, HTML5, CSS3, Vanilla JS |
+| Auth | Cookie Authentication + Role-based Authorization |
+
+---
+
+## 📞 Contact
+
+**DKD Fresh Express**
+📍 Davao City, Philippines
